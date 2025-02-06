@@ -8,18 +8,31 @@
 </head>
 <body>
 
-    <!-- musci -->
-
-    <audio id="background-music" autoplay loop>
-        <source src="./marad.mp3" type="audio/mp3">
+    <!-- music -->
+    <audio id="background-music" loop>
+        <source src="marad.mp3" type="audio/mp3">
         Your browser does not support the audio element.
     </audio>
+
+    <script>
+    // Function to play music when weight input is focused
+    function playMusic() {
+        var audio = document.getElementById('background-music');
+        if (audio.paused) {
+            audio.play();  // If music is paused, play it
+        } else {
+            audio.currentTime = 0;  // Reset audio to start from the beginning
+            audio.play();  // Play the music again from the start
+        }
+    }
+    </script>
 
     <div class="container">
         <h2>BMI Calculator</h2>
 
-        <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" placeholder="Enter weight in kg">
+        <!-- Input for Weight -->
+        <label for="weight">Enter your weight (in kg): </label>
+        <input type="number" id="weight" placeholder="Enter weight" onfocus="playMusic()">
 
         <label for="feet">Height (Feet):</label>
         <input type="number" id="feet" placeholder="Enter height in feet">
@@ -31,14 +44,13 @@
     </div>
 
     <!-- Custom Popup Modal -->
-     <!-- Custom Popup Modal -->
-<div id="bmiModal" class="modal">
-    <div class="modal-content">
-        <h2>BMI Result</h2>
-        <p id="bmiResult"></p>
-        <button class="ok-btn" onclick="closeModal()">OK</button>
+    <div id="bmiModal" class="modal">
+        <div class="modal-content">
+            <h2>BMI Result</h2>
+            <p id="bmiResult"></p>
+            <button class="ok-btn" onclick="closeModal()">OK</button>
+        </div>
     </div>
-</div>
 
     <script src="script.js"></script>
 
