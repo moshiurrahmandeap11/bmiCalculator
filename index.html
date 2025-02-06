@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>BMI Calculator</h2>
+
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" placeholder="Enter weight in kg">
+
+        <label for="feet">Height (Feet):</label>
+        <input type="number" id="feet" placeholder="Enter height in feet">
+
+        <label for="inches">Height (Inches):</label>
+        <input type="number" id="inches" placeholder="Enter height in inches">
+
+        <button onclick="calculateBMI()">Calculate BMI</button>
+    </div>
+
+    <!-- Custom Popup Modal -->
+     <!-- Custom Popup Modal -->
+<div id="bmiModal" class="modal">
+    <div class="modal-content">
+        <h2>BMI Result</h2>
+        <p id="bmiResult"></p>
+        <button class="ok-btn" onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
