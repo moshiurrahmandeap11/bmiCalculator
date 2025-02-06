@@ -21,19 +21,40 @@ function calculateBMI() {
     const bmi = weight / (heightInMeters * heightInMeters);
     const bmiFixed = bmi.toFixed(2);
 
+    // Display appropriate avatar animation based on BMI
+    const avatarVideo = document.getElementById("bmi-avatar-video");
+    const videoSource = document.getElementById("avatar-video-source");
+
     let category = "";
     if (bmi < 18.5) {
+        videoSource.src = "slim.mp4";  // Replace with your own slim video
+        avatarVideo.load();
         category = "You're underweight. Take care of your health!";
     } else if (bmi >= 18.5 && bmi <= 24.9) {
+        videoSource.src = "normal.mp4";  // Replace with your own normal video
+        avatarVideo.load();
         category = "You're normal. Keep it up!";
     } else if (bmi >= 25 && bmi <= 29.9) {
+        videoSource.src = "fat.mp4";  // Replace with your own fat video
+        avatarVideo.load();
         category = "You're overweight. Take care of your health!";
+        
     } else {
         category = "You're in danger & need to take care of your health!";
     }
 
+    // Show the modal
+    document.getElementById('bmiModal').style.display = "block";
+
+    // Close the modal
+    function closeModal() {
+        document.getElementById('bmiModal').style.display = "none";
+    }
+
     showModal(`Your BMI is <b>${bmiFixed}</b>.<br>${category}`);
 }
+
+
 
 // Function to handle "Enter" keypress
 function handleEnter(event) {

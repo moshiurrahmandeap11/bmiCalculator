@@ -4,56 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BMI Calculator</title>
-    <link rel="stylesheet" href="style.css">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <!-- music -->
-    <audio id="background-music" loop>
-        <source src="dole.mp3" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">BMI Calculator</h2>
 
-    <script>
-    // Function to play music when weight input is focused
-    function playMusic() {
-        var audio = document.getElementById('background-music');
-        if (audio.paused) {
-            audio.play();  // If music is paused, play it
-        } else {
-            audio.currentTime = 0;  // Reset audio to start from the beginning
-            audio.play();  // Play the music again from the start
-        }
-    }
-    </script>
-
-    <div class="container">
-        <h2>BMI Calculator</h2>
-
-        <!-- Input for Weight -->
-        <label for="weight">Enter your weight (in kg): </label>
-        <input type="number" id="weight" placeholder="Enter weight" onfocus="playMusic()">
-
-        <label for="feet">Height (Feet):</label>
-        <input type="number" id="feet" placeholder="Enter height in feet">
-
-        <label for="inches">Height (Inches):</label>
-        <input type="number" id="inches" placeholder="Enter height in inches">
-
-        <button onclick="calculateBMI()">Calculate BMI</button>
+        <input id="weight" type="number" placeholder="Enter Weight (kg)" class="w-full p-3 mt-4 border rounded">
+        <input id="feet" type="number" placeholder="Height in Feet" class="w-full p-3 mt-2 border rounded">
+        <input id="inches" type="number" placeholder="Height in Inches" class="w-full p-3 mt-2 border rounded">
+        
+        <button onclick="calculateBMI()" class="w-full bg-green-500 text-white p-3 mt-4 rounded hover:bg-green-600">
+            Calculate BMI
+        </button>
     </div>
 
-    <!-- Custom Popup Modal -->
-    <div id="bmiModal" class="modal">
-        <div class="modal-content">
-            <h2>BMI Result</h2>
-            <p id="bmiResult"></p>
-            <button class="ok-btn" onclick="closeModal()">OK</button>
+    <!-- Modal -->
+    <div id="bmiModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md text-center">
+            <h2 class="text-2xl font-semibold text-gray-800">BMI Result</h2>
+            <p id="bmiResult" class="mt-2 text-lg"></p>
+
+            <!-- Video Animation -->
+            <div class="mt-4 flex justify-center">
+                <video id="bmi-avatar-video" width="150" height="150" autoplay muted loop class="rounded-full border-4 border-green-500">
+                    <source id="avatar-video-source" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <button onclick="closeModal()" class="bg-green-500 text-white px-6 py-2 mt-4 rounded hover:bg-green-600">
+                OK
+            </button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Get input fields
+        const weightInput = document.getElementById("weight");
+        const feetInput = document.getElementById("feet");
+        const inchesInput = document.getElementById("inches");
+        const modal = document.getElementById("bmiModal");
 
+        function calculateBMI() {
+            const weight = Number(weightInput.value);
+            const feet = Number(feetInput.value);
+            const inches = Number(inchesInput.value);
+
+            if (weight === 0 || feet === 0) {
+                showModal("Please enter valid weight and height.");
+                return;
+            }
+
+            const heightInCM = (feet * 30.48) + (inches * 2.54);
+            const heightInMeters = heightInCM / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            const bmiFixed = bmi.toFixed(2);
+
+            // Display appropriate avatar animation based on BMI
+            const avatarVideo = document.getElementById("bmi-avatar-video");
+            const videoSource = document.getElementById("avatar-video-source");
+
+            let category = "";
+            if (bmi < 18.5) {
+                videoSource.src = "slim.mp4"; // Slim video
+                category = "You're underweight. Take care of your health!";
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                videoSource.src = "normal.mp4"; // Normal video
+                category = "You're normal. Keep it up!";
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                videoSource.src = "fat.mp4"; // Fat video
+                category = "You're overweight. Take care of your health!";
+            } else {
+                category = "You're in danger & need to take care of your health!";
+            }
+
+            avatarVideo.load();
+            avatarVideo.play();
+
+            showModal(`Your BMI is <b>${bmiFixed}</b>.<br>${category}`);
+        }
+
+        function showModal(message) {
+            document.getElementById("bmiResult").innerHTML = message;
+            modal.classList.remove("hidden");
+        }
+
+        function closeModal() {
+            modal.classList.add("hidden");
+        }
+    </script>
 </body>
 </html>
