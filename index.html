@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BMI Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="flex items-center justify-center h-screen bg-gray-100">
+
+    <audio id="background-music" loop>
+        <source src="die.webm" type="audio/mp3">
+    </audio>
+
+    <!-- Mute Icon -->
+    <div id="mute-icon" class="absolute top-4 right-4 cursor-pointer">
+        <img src="mute.png" alt="Mute" class="w-8 h-8">
+    </div>
+
+
     <div class="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
         <h2 class="text-2xl font-bold mb-4">BMI Calculator</h2>
         <input type="number" id="weight" placeholder="Enter weight (kg)" class="w-full p-2 mb-3 border rounded">
         <input type="number" id="feet" placeholder="Enter height (feet)" class="w-full p-2 mb-3 border rounded">
         <input type="number" id="inches" placeholder="Enter height (inches)" class="w-full p-2 mb-3 border rounded">
-        <button onclick="calculateBMI()" class="bg-green-500 text-white p-2 w-full rounded hover:bg-green-600">Calculate BMI</button>
+        <button onclick="calculateBMI()" class="bg-green-500 text-white p-2 w-full rounded hover:bg-green-600">Calculate
+            BMI</button>
     </div>
 
     <!-- Modal -->
@@ -23,7 +37,8 @@
                 <source id="avatar-video-source" src="" type="video/mp4">
             </video>
             <p id="bmiResult" class="mb-4"></p>
-            <button onclick="closeModal()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">OK</button>
+            <button onclick="closeModal()"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">OK</button>
         </div>
     </div>
 
@@ -36,11 +51,45 @@
         const avatarVideo = document.getElementById("bmi-avatar-video");
         const videoSource = document.getElementById("avatar-video-source");
 
+        const backgroundMusic = document.getElementById("background-music");
+        const muteIcon = document.getElementById("mute-icon");
+        let isMuted = false;
+
+        // Play music when the weight input is focused
+        weightInput.addEventListener("focus", function () {
+            // Start music only once, it won't stop after focus changes
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+            }
+        });
+
+        // Mute/Unmute the music when clicking the mute icon
+        muteIcon.addEventListener("click", function () {
+            if (isMuted) {
+                backgroundMusic.muted = false;
+                isMuted = false;
+                muteIcon.src = "mute-icon.png"; // Replace with unmute icon if needed
+            } else {
+                backgroundMusic.muted = true;
+                isMuted = true;
+                muteIcon.src = "unmute-icon.png"; // Replace with mute icon if needed
+            }
+        });
+
+        // Ensure music keeps playing even if focus changes
+        document.addEventListener("focusin", function () {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+            }
+        });
+
+
+
         function calculateBMI() {
             const weight = Number(weightInput.value);
             const feet = Number(feetInput.value);
             const inches = Number(inchesInput.value);
-            
+
             if (!weight || !feet) {
                 showModal("Please enter valid weight and height.");
                 return;
@@ -61,7 +110,7 @@
                 videoSource.src = "fat.mp4";
                 category = "You're overweight. Be careful!";
             }
-            
+
             avatarVideo.load();
             showModal(`Your BMI is <b>${bmi}</b>.<br>${category}`);
         }
@@ -75,7 +124,7 @@
             modal.classList.add("hidden");
         }
 
-        document.addEventListener("keydown", function(event) {
+        document.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
                 if (document.activeElement === weightInput) {
                     feetInput.focus();
@@ -90,4 +139,5 @@
         });
     </script>
 </body>
+
 </html>
